@@ -1,0 +1,1 @@
+FastAPI backend providing AI-driven news generation and real-time WebSocket communication for an interactive news display system.

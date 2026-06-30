@@ -1,0 +1,16 @@
+schema_version: 1
+module_path: configuration_system
+title: Multi-Project Environment Variable Configuration System
+scope: []
+source_files:
+    - backend/config.py
+    - .env
+    - .env.example
+    - frontend/.env.local
+    - sky-news-planner/.env
+    - sky-news-planner/.env.example
+    - sky-news-planner/prisma/schema.prisma
+    - sky-news-planner/src/lib/auth.ts
+    - backend/services/news_engine.py
+depends_on: []
+related_to: []

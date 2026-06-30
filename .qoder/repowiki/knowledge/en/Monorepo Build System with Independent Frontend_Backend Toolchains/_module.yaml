@@ -1,0 +1,15 @@
+schema_version: 1
+module_path: build_system
+title: Monorepo Build System with Independent Frontend/Backend Toolchains
+scope: []
+source_files:
+    - backend/requirements.txt
+    - backend/main.py
+    - frontend/package.json
+    - frontend/next.config.ts
+    - sky-news-planner/package.json
+    - sky-news-planner/next.config.ts
+    - sky-news-planner/prisma/schema.prisma
+    - push-via-api.sh
+depends_on: []
+related_to: []

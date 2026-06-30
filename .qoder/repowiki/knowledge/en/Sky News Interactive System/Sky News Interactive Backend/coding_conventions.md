@@ -1,0 +1,3 @@
+- Async/await pattern is used consistently across all I/O-bound operations, including HTTP handlers, WebSocket listeners, and external API calls.
+- Structured JSON messaging protocol for WebSocket communication, featuring `type`, `session_id`, `timestamp`, and `payload` fields.
+- Centralized error handling in services returns structured fallback data or raises HTTPExceptions with descriptive messages.

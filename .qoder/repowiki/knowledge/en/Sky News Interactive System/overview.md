@@ -1,0 +1,1 @@
+Orchestrates a real-time AI news display system by wiring a FastAPI backend with a Next.js frontend through shared environment contracts and WebSocket communication.

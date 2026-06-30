@@ -1,0 +1,1 @@
+- Shared environment variable naming conventions (e.g., `NEXT_PUBLIC_` prefix) are used to securely expose backend endpoints to the frontend child module.

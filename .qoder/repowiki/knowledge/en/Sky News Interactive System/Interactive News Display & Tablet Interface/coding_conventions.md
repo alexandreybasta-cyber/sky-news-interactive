@@ -1,0 +1,3 @@
+- All interactive page components and UI widgets are implemented as Client Components using the "use client" directive to enable React hooks and browser APIs.
+- Real-time state updates across synchronized devices are driven by a centralized `useSession` hook that processes incoming WebSocket messages via a callback pattern.
+- Shared data structures and protocol message types are strictly defined in a dedicated `constants.ts` module to ensure type safety across the display and tablet interfaces.

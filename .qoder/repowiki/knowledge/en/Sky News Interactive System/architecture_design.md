@@ -1,0 +1,3 @@
+- The root module defines the shared runtime contract via `.env.example`, enforcing consistent API and WebSocket endpoint configuration across both the backend and frontend children.
+- Cross-module communication is established through the `NEXT_PUBLIC_API_URL` and `NEXT_PUBLIC_WS_URL` environment variables, which bind the Next.js client to the FastAPI server's HTTP and WebSocket interfaces.
+- Operational synchronization is supported by `push-via-api.sh`, a repository-level utility that manages state propagation to the remote origin, decoupling deployment mechanics from the internal service architecture.

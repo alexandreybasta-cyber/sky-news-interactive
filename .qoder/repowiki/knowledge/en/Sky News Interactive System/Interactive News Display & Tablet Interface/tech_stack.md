@@ -1,0 +1,1 @@
+Next.js 16.2.9 with React 19.2.4, utilizing Tailwind CSS v4 for styling and native browser WebSocket API for real-time state synchronization.

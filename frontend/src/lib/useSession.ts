@@ -9,7 +9,7 @@ function generateSessionId(): string {
     const id = params.get("session");
     if (id) return id;
   }
-  return `session-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+  return "lobby";
 }
 
 export function useSession(onMessage?: (msg: WSMessage) => void) {

@@ -1,0 +1,1 @@
+FastAPI 0.115.0 with Uvicorn for async HTTP/WebSocket serving; OpenAI SDK 1.82.0 for DashScope (Qwen-Max) LLM integration; Pydantic Settings for environment-based configuration.

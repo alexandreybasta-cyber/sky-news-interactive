@@ -1,0 +1,12 @@
+schema_version: 1
+module_path: ""
+title: Sky News Interactive System
+scope:
+    - .gitignore
+    - push-via-api.sh
+    - .env
+    - .env.example
+    - .github-token
+source_files: []
+depends_on: []
+related_to: []

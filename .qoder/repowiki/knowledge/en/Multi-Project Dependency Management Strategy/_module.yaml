@@ -1,0 +1,14 @@
+schema_version: 1
+module_path: dependency_management
+title: Multi-Project Dependency Management Strategy
+scope: []
+source_files:
+    - backend/requirements.txt
+    - frontend/package.json
+    - frontend/package-lock.json
+    - sky-news-planner/package.json
+    - sky-news-planner/package-lock.json
+    - sky-news-planner/prisma/schema.prisma
+    - sky-news-planner/prisma/migrations/migration_lock.toml
+depends_on: []
+related_to: []

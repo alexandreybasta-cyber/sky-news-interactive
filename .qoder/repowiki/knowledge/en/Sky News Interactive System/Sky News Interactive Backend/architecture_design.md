@@ -1,0 +1,4 @@
+- Entry point: `main.py` initializes a FastAPI app with CORS middleware and includes `routers.news` (HTTP, prefix `/api`) and `routers.ws` (WebSocket).
+- Layering: `routers/` handle HTTP/WebSocket endpoints; `services/` contain business logic (`news_engine.py` for LLM integration, `video_fetcher.py` for video search, `websocket_manager.py` for session management); `models/schemas.py` defines Pydantic data models.
+- Dependency direction: Routers depend on Services; Services depend on external APIs (DashScope/OpenAI) and configuration (`config.py`).
+- State management: `websocket_manager.py` maintains an in-memory dictionary of active WebSocket connections grouped by session ID.

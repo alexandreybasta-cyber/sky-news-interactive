@@ -1,0 +1,1 @@
+A dual-view Next.js application providing a synchronized TV display and tablet control interface for an AI-powered news presentation system.

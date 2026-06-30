@@ -1,0 +1,19 @@
+schema_version: 1
+module_path: error_handling
+title: Error Handling — Informal Try/Catch with HTTPException and Silent Failures
+scope: []
+source_files:
+    - backend/main.py
+    - backend/routers/news.py
+    - backend/routers/ws.py
+    - backend/services/news_engine.py
+    - backend/services/video_fetcher.py
+    - backend/services/websocket_manager.py
+    - frontend/src/lib/websocket.ts
+    - frontend/src/components/tablet/MicButton.tsx
+    - sky-news-planner/src/app/api/shifts/route.ts
+    - sky-news-planner/src/app/api/stories/route.ts
+    - sky-news-planner/src/app/api/requests/swaps/route.ts
+    - sky-news-planner/src/lib/teams.ts
+depends_on: []
+related_to: []

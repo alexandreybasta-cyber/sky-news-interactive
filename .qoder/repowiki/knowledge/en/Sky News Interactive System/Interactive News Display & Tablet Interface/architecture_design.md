@@ -1,0 +1,4 @@
+- Adopts the Next.js App Router structure with two primary client-side routes: `/display` for the large-screen news presentation and `/tablet` for user input.
+- Centralizes real-time communication via a custom `WebSocketClient` class in `src/lib/websocket.ts`, which handles auto-reconnection and JSON message parsing.
+- Manages cross-device synchronization through a `useSession` React hook that establishes a persistent WebSocket connection identified by a URL-parameter-based session ID.
+- Enforces a strict separation of concerns by defining shared TypeScript interfaces and protocol constants in `src/lib/constants.ts`, consumed by both view-specific component trees in `src/components/display` and `src/components/tablet`.
