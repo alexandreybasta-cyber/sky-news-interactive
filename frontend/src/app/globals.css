@@ -104,6 +104,24 @@ body {
   }
 }
 
+@keyframes ken-burns {
+  0% {
+    transform: scale(1);
+  }
+  100% {
+    transform: scale(1.08);
+  }
+}
+
+@keyframes progress-bar-tiles {
+  from {
+    width: 0%;
+  }
+  to {
+    width: 100%;
+  }
+}
+
 .animate-float {
   animation: float 3s ease-in-out infinite;
 }
@@ -134,4 +152,12 @@ body {
 
 .animate-progress-bar {
   animation: progress-bar 6s linear infinite;
+}
+
+.animate-ken-burns {
+  animation: ken-burns 10s ease-in-out infinite alternate;
+}
+
+.animate-progress-bar-tiles {
+  animation: progress-bar-tiles 10s linear infinite;
 }

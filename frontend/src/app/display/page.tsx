@@ -9,7 +9,7 @@ import {
   VideoData,
   WSMessage,
 } from "@/lib/constants";
-import NewsFeed from "@/components/display/NewsFeed";
+import NewsTiles from "@/components/display/NewsTiles";
 import VideoOverlay from "@/components/display/VideoOverlay";
 
 interface Article {
@@ -80,9 +80,9 @@ export default function DisplayPage() {
     avatarState === AVATAR_STATES.PRESENT && newsData && videoData;
 
   return (
-    <div className="relative h-screen w-screen bg-white overflow-hidden">
-      {/* Main News Feed (always renders, gets covered by video overlay) */}
-      <NewsFeed articles={articles} />
+    <div className="relative h-screen w-screen bg-gray-950 overflow-hidden">
+      {/* Main News Tiles (always renders, gets covered by video overlay) */}
+      <NewsTiles articles={articles} />
 
       {/* Listening indicator - subtle corner notification */}
       {avatarState === AVATAR_STATES.LISTEN && (
