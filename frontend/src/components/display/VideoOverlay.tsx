@@ -17,7 +17,7 @@ export default function VideoOverlay({
       <iframe
         width="100%"
         height="100%"
-        src={`${videoData.video_url}?autoplay=1&mute=0&controls=1`}
+        src={`${videoData.video_url}?autoplay=1&mute=1&playsinline=1&controls=0&showinfo=0&rel=0`}
         title={videoData.title}
         frameBorder="0"
         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
