@@ -9,7 +9,8 @@ import {
   VideoData,
   WSMessage,
 } from "@/lib/constants";
-import Avatar from "@/components/display/Avatar";
+import AvatarVideo from "@/components/display/AvatarVideo";
+import AvatarFallback from "@/components/display/AvatarFallback";
 import NewsCard from "@/components/display/NewsCard";
 import VideoPlayer from "@/components/display/VideoPlayer";
 import StatusBar from "@/components/display/StatusBar";
@@ -21,6 +22,9 @@ export default function DisplayPage() {
   const [newsData, setNewsData] = useState<NewsData | null>(null);
   const [videoData, setVideoData] = useState<VideoData | null>(null);
   const [transcript, setTranscript] = useState<string>("");
+  const [streamUrl, setStreamUrl] = useState<string | null>(null);
+  const [audioUrl, setAudioUrl] = useState<string | null>(null);
+  const [useVideoAvatar, setUseVideoAvatar] = useState(true);
 
   const handleMessage = useCallback((msg: WSMessage) => {
     switch (msg.type) {
@@ -30,6 +34,8 @@ export default function DisplayPage() {
           setNewsData(null);
           setVideoData(null);
           setTranscript("");
+          setStreamUrl(null);
+          setAudioUrl(null);
         }
         break;
       case MESSAGE_TYPES.SPEECH_RESULT:
@@ -40,6 +46,10 @@ export default function DisplayPage() {
         break;
       case MESSAGE_TYPES.VIDEO_RESULT:
         setVideoData(msg.payload as unknown as VideoData);
+        break;
+      case MESSAGE_TYPES.AVATAR_STREAM:
+        setStreamUrl(msg.payload.stream_url as string | null);
+        setAudioUrl(msg.payload.audio_url as string | null);
         break;
     }
   }, []);
@@ -55,7 +65,16 @@ export default function DisplayPage() {
         className={`flex items-center justify-center transition-all duration-700 ease-in-out ${showContent ? "w-1/3" : "w-full"}`}
       >
         <div className="flex flex-col items-center">
-          <Avatar state={avatarState} />
+          {useVideoAvatar ? (
+            <AvatarVideo
+              state={avatarState}
+              streamUrl={streamUrl}
+              audioUrl={audioUrl}
+              onError={() => setUseVideoAvatar(false)}
+            />
+          ) : (
+            <AvatarFallback state={avatarState} />
+          )}
 
           {/* Status text below avatar */}
           <div className="mt-8 text-center">

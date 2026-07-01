@@ -15,6 +15,7 @@ export const MESSAGE_TYPES = {
   SPEECH_RESULT: "speech_result",
   NEWS_RESULT: "news_result",
   VIDEO_RESULT: "video_result",
+  AVATAR_STREAM: "avatar_stream",
   ERROR: "error",
 } as const;
 
@@ -38,6 +39,12 @@ export interface VideoData {
   video_id: string;
   thumbnail: string;
   title: string;
+}
+
+export interface AvatarStreamData {
+  stream_url: string | null;
+  stream_id: string | null;
+  audio_url: string | null;
 }
 
 export interface WSMessage {

@@ -10,6 +10,13 @@ class Settings(BaseSettings):
     BASE_URL: str = "http://localhost:8000"
     WS_URL: str = "ws://localhost:8000"
 
+    # HeyGen Avatar API
+    HEYGEN_API_KEY: str = ""
+    HEYGEN_AVATAR_ID: str = ""
+    HEYGEN_VOICE_ID: str = ""
+    HEYGEN_BASE_URL: str = "https://api.heygen.com"
+    HEYGEN_MONTHLY_BUDGET_SEC: int = 200
+
     class Config:
         env_file = os.path.join(os.path.dirname(os.path.dirname(__file__)), ".env")
         env_file_encoding = "utf-8"

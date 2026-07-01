@@ -17,7 +17,8 @@ Respond ONLY with valid JSON containing:
   "key_facts": ["fact 1", "fact 2", "fact 3"],
   "video_search_term": "A YouTube search term to find a relevant video",
   "sources": ["source 1", "source 2"],
-  "confidence": 0.85
+  "confidence": 0.85,
+  "speaking_script": "A natural 2-3 sentence script for a news presenter to read aloud. Starts with a conversational hook. Written to sound natural when spoken, not read."
 }
 
 Rules:
@@ -27,6 +28,7 @@ Rules:
 - video_search_term should be specific enough to find a relevant YouTube video
 - sources should reference credible news outlets
 - confidence should be between 0 and 1 based on how certain you are about the information
+- speaking_script should be conversational and engaging, suitable for a TV news presenter to speak aloud
 - Respond with ONLY the JSON object, no additional text"""
 
 
@@ -68,6 +70,7 @@ async def generate_news(query: str, context: str = "") -> dict:
             "video_search_term": result.get("video_search_term", query),
             "sources": result.get("sources", []),
             "confidence": float(result.get("confidence", 0.5)),
+            "speaking_script": result.get("speaking_script", f"Here's the latest: {result.get('headline', 'News Update')}. {result.get('summary', '')}"),
         }
 
     except json.JSONDecodeError:
@@ -79,6 +82,7 @@ async def generate_news(query: str, context: str = "") -> dict:
             "video_search_term": query,
             "sources": [],
             "confidence": 0.3,
+            "speaking_script": f"Here's an update on {query}. We're gathering the details for you now.",
         }
     except Exception as e:
         return {
@@ -88,4 +92,5 @@ async def generate_news(query: str, context: str = "") -> dict:
             "video_search_term": query,
             "sources": [],
             "confidence": 0.0,
+            "speaking_script": f"We're looking into {query} for you. Stay tuned for more details.",
         }
