@@ -2,6 +2,7 @@ import httpx
 import json
 import os
 import time
+from typing import Optional
 import edge_tts
 from pathlib import Path
 from config import settings
@@ -47,7 +48,7 @@ def log_usage(seconds: float):
     print(f"HeyGen usage: {seconds:.1f}s this interaction, {usage['total_seconds']:.1f}s/{settings.HEYGEN_MONTHLY_BUDGET_SEC}s monthly total")
 
 
-async def create_session() -> dict | None:
+async def create_session() -> Optional[dict]:
     """
     Create a HeyGen Realtime avatar session.
     Returns {"stream_id": "...", "stream_url": "..."} or None on failure.

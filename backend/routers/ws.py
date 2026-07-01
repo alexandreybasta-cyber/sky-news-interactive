@@ -1,5 +1,6 @@
 import asyncio
 import time
+from typing import Dict
 from fastapi import APIRouter, WebSocket, WebSocketDisconnect
 from services.websocket_manager import manager
 from services.news_engine import generate_news
@@ -9,7 +10,7 @@ from services.heygen_avatar import create_session, send_text, close_session, gen
 router = APIRouter()
 
 # Track active HeyGen sessions for cleanup on disconnect
-_active_heygen_sessions: dict[str, str] = {}  # session_id -> stream_id
+_active_heygen_sessions: Dict[str, str] = {}  # session_id -> stream_id
 
 
 def make_message(msg_type: str, session_id: str, payload: dict) -> dict:
