@@ -2,6 +2,7 @@ from fastapi import APIRouter, HTTPException
 from models.schemas import NewsRequest, NewsResponse, VideoResult
 from services.news_engine import generate_news
 from services.video_fetcher import search_video
+from services.news_scraper import fetch_sky_news
 
 router = APIRouter()
 
@@ -33,3 +34,10 @@ async def search_video_endpoint(request: dict):
         return VideoResult(**result)
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Video search failed: {str(e)}")
+
+
+@router.get("/news/feed")
+async def get_news_feed():
+    """Get latest articles from Sky News."""
+    articles = await fetch_sky_news()
+    return {"articles": articles, "count": len(articles)}

@@ -1,5 +1,5 @@
 "use client";
-import { useState, useCallback } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useSession } from "@/lib/useSession";
 import {
   AvatarState,
@@ -9,23 +9,49 @@ import {
   VideoData,
   WSMessage,
 } from "@/lib/constants";
-import AvatarVideo from "@/components/display/AvatarVideo";
-import AvatarFallback from "@/components/display/AvatarFallback";
-import NewsCard from "@/components/display/NewsCard";
-import VideoPlayer from "@/components/display/VideoPlayer";
-import StatusBar from "@/components/display/StatusBar";
+import NewsFeed from "@/components/display/NewsFeed";
+import VideoOverlay from "@/components/display/VideoOverlay";
+
+interface Article {
+  title: string;
+  category: string;
+  url: string;
+  image_url: string;
+  snippet: string;
+  timestamp: string;
+}
 
 export default function DisplayPage() {
+  const [articles, setArticles] = useState<Article[]>([]);
   const [avatarState, setAvatarState] = useState<AvatarState>(
     AVATAR_STATES.IDLE
   );
   const [newsData, setNewsData] = useState<NewsData | null>(null);
   const [videoData, setVideoData] = useState<VideoData | null>(null);
-  const [transcript, setTranscript] = useState<string>("");
-  const [streamUrl, setStreamUrl] = useState<string | null>(null);
-  const [audioUrl, setAudioUrl] = useState<string | null>(null);
-  const [useVideoAvatar, setUseVideoAvatar] = useState(true);
+  const [transcript, setTranscript] = useState("");
 
+  // Fetch news feed on mount and every 5 minutes
+  useEffect(() => {
+    const fetchFeed = async () => {
+      try {
+        const apiUrl =
+          process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000/api";
+        const resp = await fetch(`${apiUrl}/news/feed`);
+        if (resp.ok) {
+          const data = await resp.json();
+          setArticles(data.articles || []);
+        }
+      } catch (e) {
+        console.error("Failed to fetch news feed:", e);
+      }
+    };
+
+    fetchFeed();
+    const interval = setInterval(fetchFeed, 5 * 60 * 1000);
+    return () => clearInterval(interval);
+  }, []);
+
+  // WebSocket message handler
   const handleMessage = useCallback((msg: WSMessage) => {
     switch (msg.type) {
       case MESSAGE_TYPES.AVATAR_STATE_CHANGE:
@@ -34,8 +60,6 @@ export default function DisplayPage() {
           setNewsData(null);
           setVideoData(null);
           setTranscript("");
-          setStreamUrl(null);
-          setAudioUrl(null);
         }
         break;
       case MESSAGE_TYPES.SPEECH_RESULT:
@@ -47,80 +71,62 @@ export default function DisplayPage() {
       case MESSAGE_TYPES.VIDEO_RESULT:
         setVideoData(msg.payload as unknown as VideoData);
         break;
-      case MESSAGE_TYPES.AVATAR_STREAM:
-        setStreamUrl(msg.payload.stream_url as string | null);
-        setAudioUrl(msg.payload.audio_url as string | null);
-        break;
     }
   }, []);
 
-  const { isConnected, sessionId } = useSession(handleMessage);
+  const { isConnected } = useSession(handleMessage);
 
-  const showContent = avatarState === AVATAR_STATES.PRESENT && newsData;
+  const showVideo =
+    avatarState === AVATAR_STATES.PRESENT && newsData && videoData;
 
   return (
-    <div className="relative h-screen w-screen bg-white flex overflow-hidden">
-      {/* Left Panel - Avatar */}
-      <div
-        className={`flex items-center justify-center transition-all duration-700 ease-in-out ${showContent ? "w-1/3" : "w-full"}`}
-      >
-        <div className="flex flex-col items-center">
-          {useVideoAvatar ? (
-            <AvatarVideo
-              state={avatarState}
-              streamUrl={streamUrl}
-              audioUrl={audioUrl}
-              onError={() => setUseVideoAvatar(false)}
-            />
-          ) : (
-            <AvatarFallback state={avatarState} />
-          )}
+    <div className="relative h-screen w-screen bg-white overflow-hidden">
+      {/* Main News Feed (always renders, gets covered by video overlay) */}
+      <NewsFeed articles={articles} />
 
-          {/* Status text below avatar */}
-          <div className="mt-8 text-center">
-            {avatarState === AVATAR_STATES.IDLE && (
-              <p className="text-2xl text-gray-400 animate-breathe">
-                Ask me anything...
-              </p>
-            )}
-            {avatarState === AVATAR_STATES.LISTEN && (
-              <p className="text-2xl text-orange-500 font-medium">
-                Listening...
-              </p>
-            )}
-            {avatarState === AVATAR_STATES.THINK && (
-              <div className="flex flex-col items-center">
-                <p className="text-2xl text-orange-600 font-medium mb-2">
-                  Thinking...
-                </p>
-                {transcript && (
-                  <p className="text-lg text-gray-500 italic">
-                    &ldquo;{transcript}&rdquo;
-                  </p>
-                )}
-              </div>
-            )}
-            {avatarState === AVATAR_STATES.PRESENT && transcript && (
-              <p className="text-lg text-gray-400 italic">
-                &ldquo;{transcript}&rdquo;
-              </p>
-            )}
-          </div>
-        </div>
-      </div>
-
-      {/* Right Panel - News + Video (slides in when presenting) */}
-      {showContent && (
-        <div className="w-2/3 p-12 flex flex-col justify-center overflow-y-auto">
-          <NewsCard data={newsData} />
-          {videoData && (
-            <VideoPlayer videoUrl={videoData.video_url} title={videoData.title} />
-          )}
+      {/* Listening indicator - subtle corner notification */}
+      {avatarState === AVATAR_STATES.LISTEN && (
+        <div className="absolute top-6 right-6 z-20 flex items-center gap-3 bg-orange-500 text-white px-5 py-3 rounded-full shadow-lg animate-fade-in">
+          <div className="w-3 h-3 bg-white rounded-full animate-pulse" />
+          <span className="font-medium">Listening...</span>
         </div>
       )}
 
-      {/* Status Bar */}
-      <StatusBar isConnected={isConnected} sessionId={sessionId} />
+      {/* Thinking overlay - top bar */}
+      {avatarState === AVATAR_STATES.THINK && (
+        <div className="absolute top-0 left-0 right-0 z-20 bg-orange-500/90 text-white px-8 py-4 flex items-center justify-center gap-3 animate-slide-down backdrop-blur-sm">
+          <div className="flex gap-2">
+            <div
+              className="w-2.5 h-2.5 bg-white rounded-full animate-bounce"
+              style={{ animationDelay: "0s" }}
+            />
+            <div
+              className="w-2.5 h-2.5 bg-white rounded-full animate-bounce"
+              style={{ animationDelay: "0.15s" }}
+            />
+            <div
+              className="w-2.5 h-2.5 bg-white rounded-full animate-bounce"
+              style={{ animationDelay: "0.3s" }}
+            />
+          </div>
+          <span className="text-lg font-medium">
+            Finding relevant news for: &ldquo;{transcript}&rdquo;
+          </span>
+        </div>
+      )}
+
+      {/* Video Overlay - covers everything when presenting */}
+      {showVideo && <VideoOverlay newsData={newsData} videoData={videoData} />}
+
+      {/* Connection status */}
+      <div className="absolute bottom-3 left-4 z-40 flex items-center gap-2 text-xs text-gray-400">
+        <div
+          className={`w-2 h-2 rounded-full ${
+            isConnected ? "bg-green-500" : "bg-red-500"
+          }`}
+        />
+        <span>{isConnected ? "Live" : "Reconnecting..."}</span>
+      </div>
     </div>
   );
 }
